@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  influxdb:
+    image: influxdb:2.1.1
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=user
+      - DOCKER_INFLUXDB_INIT_PASSWORD=A95f336V58
+      - DOCKER_INFLUXDB_INIT_ORG=org
+      - DOCKER_INFLUXDB_INIT_BUCKET=electricity
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=BK6tSeFCSRQ7vRzHejGF9SZ837fp2UMn
+  dataserver:
+    build:
+      context: ./
+      dockerfile: ./dataserver/Dockerfile
+    environment:
+      - DATASERVER_PORT=9090
+      - DATABASE_START="2019-01-01T00:00:00Z"
+      - DATABASE_STOP="2019-02-01T00:00:00Z"
+      - DATABASE_TABLE_NAME=electricity
+      - DATABASE_DB_NAME=org
+      - DATABASE_URL="http://influxdb:8086"
+      - DATABASE_TOKEN=BK6tSeFCSRQ7vRzHejGF9SZ837fp2UMn
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+  webserver:
+    build:
+      context: ./webserver
+    environment:
+      - RPC_SERVER_ADDRESS="dataserver:9090"
+    depends_on:
+      - dataserver
+    links:
+      - dataserver
+  frontend:
+    build:
+      context: ./frontend/
+    ports:
+      - "8000:80"
+    links:
+      - webserver
