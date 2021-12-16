@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/fakegermano/consumption/proto";
+
+service MeterUsageService {
+  rpc Get(MeterUsageRequest) returns (MeterUsageResponse) {}
+}
+
+message MeterUsageRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+message MeterUsageResponse { repeated MeterUsage usages = 1; }
+
+message MeterUsage {
+  int64 time = 1;
+  double usage = 2;
+}
