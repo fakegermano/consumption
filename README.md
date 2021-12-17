@@ -2,36 +2,9 @@
 
 This is a microservice-based application infrastructure to allow users to access the electricity usage from a set o meters.
 
-It uses the following general architecture and protocols:
+It uses the following general architecture and protocols [components.iuml](components.iuml):
 
-``` plantuml
-@startuml
-interface FLUX as f
-interface gRPC as g
-interface HTTP as h
-
-database "influxdb" {
-[influxdb] as DB
-[csv data] as CSV
-}
-[dataserver] as DATA
-[webserver] as WEB
-[frontend] as FRONT
-
-user -> FRONT : interface
-FRONT -> h : json
-h -> WEB : json
-WEB -> g : grpc
-g -> DATA : grpc
-DATA -> f : bolt
-f -> DB : bolt
-DB -> DATA : line-proto
-DATA -> WEB : grpc
-WEB -> FRONT : json
-
-CSV ..> DB : init
-@enduml
-```
+![components.iuml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/fakegermano/consumption/master/components.iuml)
 
 ## Compiling `protobuf` to golang
 

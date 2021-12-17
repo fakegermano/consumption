@@ -1,0 +1,26 @@
+@startuml
+interface FLUX as f
+interface gRPC as g
+interface HTTP as h
+
+database "influxdb" {
+[influxdb] as DB
+[csv data] as CSV
+}
+[dataserver] as DATA
+[webserver] as WEB
+[frontend] as FRONT
+
+user -> FRONT : interface
+FRONT -> h : json
+h -> WEB : json
+WEB -> g : grpc
+g -> DATA : grpc
+DATA -> f : bolt
+f -> DB : bolt
+DB -> DATA : line-proto
+DATA -> WEB : grpc
+WEB -> FRONT : json
+
+CSV ..> DB : init
+@enduml
