@@ -37,8 +37,6 @@ services:
       - RPC_SERVER_PORT=9090
     depends_on:
       - dataserver
-    ports:
-      - "8000:80"
     links:
       - dataserver
   frontend:

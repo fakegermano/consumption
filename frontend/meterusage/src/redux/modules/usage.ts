@@ -24,7 +24,7 @@ const clear = () => {
 export const loadUsages = (limit?: number, offset?: number) => {
     return (dispatch: Dispatch<AnyAction>) => {
         dispatch(loading())
-        axios.get("http://localhost:8000/api/", {
+        axios.get("/api/", {
             params: {limit, offset}
         }).then(res => {
             const usages = res.data;

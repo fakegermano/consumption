@@ -1,22 +1,17 @@
-# FROM tiangolo/node-frontend:14 as build-stage
+FROM node:14 as build-stage
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY package*.json /app/
+COPY ./meterusage/package*.json /app/
 
-# RUN npm install
+RUN npm install
 
-# COPY ./meterusage /app/
+COPY ./meterusage /app/
 
-# RUN npm run build
+RUN npm run build
 
-# FROM nginx:latest
-# MAINTAINER Daniel Travieso <danielgtravieso@gmail.com>
+FROM nginx:latest
+MAINTAINER Daniel Travieso <danielgtravieso@gmail.com>
 
-# COPY --from=build-stage /app/build /usr/share/nginx/html
-# COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
-
-
-FROM busybox
-
-CMD ["sleep", "60"]
+COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
