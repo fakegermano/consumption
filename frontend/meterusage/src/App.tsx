@@ -3,7 +3,7 @@ import { Usages } from "./components/Usages"
 
 const App = () => {
   return (
-    <div>
+    <div className="container-fluid">
         <Usages />
     </div>
   )

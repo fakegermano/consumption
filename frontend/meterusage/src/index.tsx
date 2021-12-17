@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
@@ -7,7 +8,6 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { rootReducer } from "./redux"
 import thunk from 'redux-thunk'
-
 
 const composeEnhancers =
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
