@@ -84,7 +84,9 @@ func (s *MeterUsageServer) Get(ctx context.Context, in *pb.MeterUsageRequest) (*
 	if in.GetLimit() < 0 || in.GetOffset() < 0 {
 		return nil, errors.New("limit and offset cannot be negative")
 	}
+
 	usages, err := s.repository.Get(in.GetLimit(), in.GetOffset())
+	log.Printf("got %d elements from (limit: %d offset: %d)", len(usages), in.GetLimit(), in.GetOffset())
 	return &pb.MeterUsageResponse{
 		Usages: usages,
 	}, err
