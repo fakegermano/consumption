@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"strconv"
 
 	pb "github.com/fakegermano/consumption/proto"
 	"github.com/influxdata/influxdb-client-go/v2"
@@ -22,13 +21,16 @@ func getenv(key, fallback string) string {
 }
 
 var (
-	port, _ = strconv.Atoi(getenv("DATASERVER_PORT", "50051"))
-	start   = getenv("DATABASE_START", "2019-01-01T00:00:00Z")
-	stop    = getenv("DATABASE_STOP", "2019-02-01T00:00:00Z")
-	bucket  = getenv("DATABASE_TABLE_NAME", "electricity")
-	org     = getenv("DATABASE_DB_NAME", "org")
-	address = getenv("DATABASE_URL", "http://localhost:8086")
-	token   = getenv("DATABASE_TOKEN", "BK6tSeFCSRQ7vRzHejGF9SZ837fp2UMn")
+	port        = getenv("DATASERVER_PORT", "50051")
+	start       = getenv("DATABASE_START", "2019-01-01T00:00:00Z")
+	stop        = getenv("DATABASE_STOP", "2019-02-01T00:00:00Z")
+	bucket      = getenv("DATABASE_TABLE_NAME", "electricity")
+	org         = getenv("DATABASE_DB_NAME", "org")
+	db_hostname = getenv("DATABASE_HOSTNAME", "localhost")
+	db_port     = getenv("DATABASE_PORT", "8086")
+	token       = getenv("DATABASE_TOKEN", "BK6tSeFCSRQ7vRzHejGF9SZ837fp2UMn")
+
+	db_address = fmt.Sprintf("http://%s:%s", db_hostname, db_port)
 )
 
 type MeterUsageServer struct {
@@ -42,7 +44,7 @@ type MeterUsageRepository struct {
 
 func NewMeterUsageRepository() *MeterUsageRepository {
 	return &MeterUsageRepository{
-		influxdb2.NewClient(address, token),
+		influxdb2.NewClient(db_address, token),
 	}
 }
 
@@ -89,7 +91,7 @@ func (s *MeterUsageServer) Get(ctx context.Context, in *pb.MeterUsageRequest) (*
 }
 
 func (s *MeterUsageServer) Run() error {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

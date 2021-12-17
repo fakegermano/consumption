@@ -18,11 +18,12 @@ services:
       dockerfile: ./dataserver/Dockerfile
     environment:
       - DATASERVER_PORT=9090
-      - DATABASE_START="2019-01-01T00:00:00Z"
-      - DATABASE_STOP="2019-02-01T00:00:00Z"
+      - DATABASE_START=2019-01-01T00:00:00Z
+      - DATABASE_STOP=2019-02-01T00:00:00Z
       - DATABASE_TABLE_NAME=electricity
       - DATABASE_DB_NAME=org
-      - DATABASE_URL="http://influxdb:8086"
+      - DATABASE_HOSTNAME=influxdb
+      - DATABASE_PORT=8086
       - DATABASE_TOKEN=BK6tSeFCSRQ7vRzHejGF9SZ837fp2UMn
     depends_on:
       - influxdb
@@ -32,15 +33,18 @@ services:
     build:
       context: ./webserver
     environment:
-      - RPC_SERVER_ADDRESS="dataserver:9090"
+      - RPC_SERVER_HOSTNAME=dataserver
+      - RPC_SERVER_PORT=9090
     depends_on:
       - dataserver
+    ports:
+      - "8000:80"
     links:
       - dataserver
   frontend:
     build:
       context: ./frontend/
     ports:
-      - "8000:80"
+      - "8080:80"
     links:
       - webserver

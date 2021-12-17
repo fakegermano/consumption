@@ -9,7 +9,10 @@ from typing import List
 from meterusage_pb2 import MeterUsageRequest
 from meterusage_pb2_grpc import MeterUsageServiceStub
 
-RPC_SERVER_ADDRESS = os.environ.get("RPC_SERVER_ADDRESS", "localhost:50051")
+RPC_SERVER_HOSTNAME = os.environ.get("RPC_SERVER_HOSTNAME", "localhost")
+RPC_SERVER_PORT = os.environ.get("RPC_SERVER_PORT", 50051)
+RPC_SERVER_ADDRESS = f"{RPC_SERVER_HOSTNAME}:{RPC_SERVER_PORT}"
+
 app = FastAPI(title="Meter Usage")
 
 
