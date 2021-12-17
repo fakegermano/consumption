@@ -11,7 +11,7 @@ database "influxdb" {
 [webserver] as WEB
 [frontend] as FRONT
 
-user -> FRONT : interface
+user -> FRONT : browser
 FRONT -> h : json
 h -> WEB : json
 WEB -> g : grpc
